@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import List, Literal, Optional
 
 import bcrypt
+import certifi
 from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, FastAPI, Header, HTTPException, Query
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -32,7 +33,13 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger("finly")
 
 mongo_url = os.environ["MONGO_URL"]
-client = AsyncIOMotorClient(mongo_url)
+
+client = AsyncIOMotorClient(
+    mongo_url,
+    tls=True,
+    tlsCAFile=certifi.where()
+)
+
 db = client[os.environ["DB_NAME"]]
 
 
