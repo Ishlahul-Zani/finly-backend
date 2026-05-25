@@ -37,11 +37,13 @@ mongo_url = os.environ["MONGO_URL"]
 client = AsyncIOMotorClient(
     mongo_url,
     tls=True,
-    tlsCAFile=certifi.where()
+    tlsCAFile=certifi.where(),
+    serverSelectionTimeoutMS=30000,
+    connectTimeoutMS=30000,
+    socketTimeoutMS=30000,
 )
 
 db = client[os.environ["DB_NAME"]]
-
 
 # ──────────────────────────── Lifespan (indexes + cleanup) ────────────────────────────
 @asynccontextmanager
